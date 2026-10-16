@@ -9,9 +9,12 @@
                 font-family: undertaleTypeface;
                 src: url(fonts/PixelOperator.ttf);
             }
+            @font-face {
+                font-family: genText;
+                src: url(fonts/terminal16unicode.ttf);
+            }
             body{
                 background-color: rgb(213, 180, 224);
-                font-family: "undertaleTypeface";
             }
             #container{
                 width: 100%;
@@ -24,6 +27,18 @@
                 width: 500px;
                 margin-left: auto;
                 margin-right: auto;
+                font-family: "undertaleTypeface";
+                border: 4px solid white;
+            }
+            h1, h2, p, a, input{
+                font-family: "genText";
+
+            }
+            #btn:hover, #btn_reset:hover{
+                transform: scale(1.05);
+            }
+            #btn:active, #btn_reset:active{
+                transform: scale(0.9);
             }
         </style>
     </head>
@@ -35,9 +50,12 @@
             <hr>
             <h2>Button Clicker</h2>
             <p><i>The completely new and innovative game that definitely hasn't been done before!</i></p>
-            <br>
             <h3 id="output">0</h3>
-            <input type="button" value="Click" id="btn">
+            <button type="button" id="btn" style="background: none; border: none;">
+                <img src="../week1/images/buttonclicker.png" alt="Button Image" width="150">
+            </button>
+            <br>
+            <!-- <input type="button" value="Click" id="btn"> -->
             <input type="button" value="Clear Clicks" id="btn_reset">
         </div>
 
@@ -60,6 +78,8 @@
             var clickerButton = document.querySelector("#btn");
             var clearButton = document.querySelector("#btn_reset");
             var clickerOutput = document.querySelector("#output");
+            // the below file name IS correct. It's taken from Minecraft, which formats sounds with ".ogg" but the wiki has it formatted in ".mp3" so it results in ".ogg.mp3".
+            var clickerSound = new Audio("audio/Click_stereo.ogg.mp3");
 
             var clickNum = 0;
 
@@ -70,11 +90,15 @@
             clickerButton.addEventListener("click", function(){
                 clickNum++;
                 updateDisplayOutput();
+                clickerSound.currentTime = 0;
+                clickerSound.play();
             });
 
             clearButton.addEventListener("click", function(){
                 clickNum = 0
                 updateDisplayOutput();
+                clickerSound.currentTime = 0;
+                clickerSound.play();
             });
 
          </script>
