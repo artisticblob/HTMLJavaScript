@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Week 2 Gun Program</title>
     <!--PUT YOUR NAME IN THE META TAG FOR AUTHOR-->
-    <meta name="author" content="YOUR NAME GOES HERE">
+    <meta name="author" content="Colton Sylvia">
     <!--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
     <meta name="description" content="Small programming assignment using events, variables, functions and conditional logic">
 </head>
@@ -58,6 +58,7 @@
         Adds functionality to the button so that when it is clicked it will execute the shoot function
         */
         triggerButton.addEventListener(`click`, shoot)
+        reloadButton.addEventListener(`click`, reload)
 
         /*
         When the shoot function is executed by a user/player clicking the trigger button:
@@ -86,6 +87,39 @@
             c. Display the result on in the reloadDisplay by changing it's innerHTML
             d. EXTRA CHALLENGE: Figure out how much ammo to load. This will require some math based on how much ammo has been expended and the maximum amount ammo the weapon can hold
         --------------------------------------------------*/
+
+        function reload(event)
+        {
+            var requiredAmmo = max - currentAmmo
+            if(inventory>=requiredAmmo)
+            {
+                currentAmmo = currentAmmo + requiredAmmo;
+                inventory = inventory - requiredAmmo;
+            }
+            else if(inventory<requiredAmmo)
+            {
+                currentAmmo = currentAmmo + inventory;
+                inventory = 0;
+            }
+            triggerDisplay.innerHTML = `AMMO: ${currentAmmo}`
+            reloadDisplay.innerHTML = `INVENTORY: ${inventory}`
+        }
+        
+        // Old reload function, very simple but overall worse as it requires you to reload one bullet at a time
+        // function reload(event)
+        // {
+        //     inventory--
+        //     if(inventory>=0)
+        //     {
+        //         currentAmmo++;
+        //     }
+        //     else if(inventory<0)
+        //     {
+        //         inventory = 0;
+        //     }
+        //     reloadDisplay.innerHTML = `INVENTORY: ${inventory}`
+        //     triggerDisplay.innerHTML = `AMMO: ${currentAmmo}`
+        // }
     </script>
 </body>
 </html>
