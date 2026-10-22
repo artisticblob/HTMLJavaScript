@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Week 3 Drawing Using HTML Canvas</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            #container{
+                width: 800px;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="pageHeader">        
+            <h1>Week 3 Lab - Drawing on the HTML Canvas</h1>
+            <h2>10/22/26 - Colton Sylvia</h2>
+            <a href="../index.html">Back to main page</a>
+        </div>
+        <hr>
+        <br>
+        <br>
+        <div id="container">
+            <canvas id="canvas" width="800" height="600" style="border: 1px solid black;">
+            Your browser does not seem to support the HTML canvas element; sorry..!
+            </canvas>
+        </div>
+        
+        <!-- In Document JavaSript -->
+         <script>
+            // Common variables to set up the canvas
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+
+            // Drawing a square
+            ctx.fillStyle = "cyan";
+            ctx.fillRect(0, 0, 50, 50);
+
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(0, 550, 50, 50);
+            
+            ctx.fillStyle = "magenta";
+            ctx.fillRect(750, 0, 50, 50);
+            
+            ctx.fillStyle = "black";
+            ctx.fillRect(750, 550, 50, 50);
+            
+            ctx.fillStyle = "red";
+            ctx.fillRect(0, canvas.height/2 - 25, 50, 50);
+            
+            ctx.fillStyle = "lime";
+            ctx.fillRect(canvas.width/2 - 25, canvas.height/2 - 25, 50, 50);
+            
+            ctx.fillStyle = "blue";
+            ctx.fillRect(750, canvas.height/2 - 25, 50, 50);
+
+            // Outlining boxes
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(0, canvas.height/2 - 25, 50, 50);
+
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(canvas.width/2 - 25, canvas.height/2 - 25, 50, 50);
+
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(750, canvas.height/2 - 25, 50, 50);
+
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(0, 0, 50, 50);
+
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(0, 550, 50, 50);
+            
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(750, 0, 50, 50);
+            
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(750, 550, 50, 50);
+
+            // Drawing lines
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 5.0;
+            
+            ctx.beginPath();
+            ctx.moveTo(0,0);
+            ctx.lineTo(800, 600);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(800,0);
+            ctx.lineTo(canvas.width/2 + 25, canvas.height/2 - 25);
+            ctx.lineTo(canvas.width/2 + 25, canvas.height/2 + 25);
+            ctx.lineTo(canvas.width/2 - 25, canvas.height/2 + 25);
+            ctx.lineTo(canvas.width/2 - 25, canvas.height/2 - 25);
+            ctx.lineTo(canvas.width/2 + 25, canvas.height/2 - 25);
+            ctx.stroke();
+
+            // Drawing circles
+            ctx.beginPath();
+            ctx.arc(canvas.width/2-200, canvas.height/2, 100, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+            // Circle Part 2!!! (Pacman this time)
+            ctx.fillStyle = "yellow";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(canvas.width/2+200, canvas.height/2, 100, 45*(Math.PI/180), 315*(Math.PI/180));
+            ctx.lineTo(canvas.width/2+200, canvas.height/2);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+         </script>
+    </body>
+</html>
