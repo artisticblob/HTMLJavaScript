@@ -12,17 +12,33 @@ var moveDirection = {x:0.8, y:1};
 var boxColor = "red";
 var shipSprite = {image:document.getElementById("ship"),x:1,y:1,moveX:0,moveY:0};
 
-var star = {
-    x:0,
-    y:0,
-    radius:0,
-    color:black
-    drawCircle:function(){
-        ctx.beginPath();
-        ctx.drawArc(this.x, this.y, this.radius, 0, 2*Math.PI);
-        ctx.fill();
-    },
+function createStar(){
+    var star = {
+        x:0,
+        y:0,
+        radius:0,
+        color: "black",
+        drawCircle:function(){
+            ctx.beginPath();
+            ctx.fillStyle = this.color
+            ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+            ctx.fill();
+        },
+    }
+    return star;
 }
+
+var starCount = 50;
+// an array for each of the "stars" created by the for loop
+var stars = [];
+
+for(var i = 0; i < starCount; i++){
+    stars[i] = createStar();
+    stars[i].x = Math.random()*canvas.width;
+    stars[i].y = Math.random()*canvas.height;
+    stars[i].radius = Math.random() * 10;
+}
+
 
 shipSprite.x = canvas.width/2
 shipSprite.y = canvas.height/2 + 100;
@@ -89,6 +105,11 @@ function game(){
         boxColor = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
     }
     
+    for(var i = 0; i < stars.length; i++){
+        // drawing "stars"
+        stars[i].drawCircle();
+    }
+
     ctx.fillStyle = boxColor;
     ctx.fillRect(startPoint.x, startPoint.y, 25, 25);
     ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25, 25);
