@@ -53,6 +53,12 @@ var a = false;
 var d = false;
 var w = false;
 var s = false;
+var space = false;
+
+// Bullet tracker
+var bullets = [];
+var shootCooldown = 0;
+
 
 // On key pressed
 document.addEventListener("keydown", function(e){
@@ -68,6 +74,10 @@ document.addEventListener("keydown", function(e){
     };
     if(e.key == "s"){
         s = true;
+    }
+    if(e.code === "Space"){
+        space = true;
+        e.preventDefault
     }
 })
 
@@ -85,6 +95,9 @@ document.addEventListener("keyup", function(e){
     };
     if(e.key == "s"){
         s = false;
+    }
+    if(e.code === "Space"){
+        space = false;
     }
 })
 
@@ -170,6 +183,23 @@ function game(){
     shipSprite.x += shipSprite.moveX;
     shipSprite.y += shipSprite.moveY;
     
+    // Bullet firing code
+    if(shootCooldown > 0){
+        shootCooldown--
+    }
+
+    if(space && shootCooldown === 0){
+        bullets.push({
+            x:shipSprite.x + 25 / 2 - 2,
+            y:shipSprite.y - 10,
+            width: 4,
+            height: 10,
+            speed: 8,
+            color: "white"
+        });
+        shootCooldown = 10;
+    }
+
     //Draws Background
     ctx.fillStyle = "black";
     ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -177,7 +207,7 @@ function game(){
     for(var i = 0; i < stars.length; i++){
         // drawing "stars"
 
-        if(shipToStarCollision(stars[i])){
+        if(shipToStarCollision(shipSprite, stars[i])){
             shipSprite.x = canvas.width/2;
             shipSprite.y = canvas.height/2 + 100;
             shipSprite.moveX = 0;
@@ -191,8 +221,49 @@ function game(){
             stars[i].x = Math.random() * canvas.width;
             stars[i].y = -(Math.random() * canvas.height);
             score += 10
-            console.log(score)
+            console.log(`score: ${score}`)
         }
+    }
+
+    // Draw bullets & check for collision
+    for(var i = bullets.length -1; i >= 0; i--){
+        var bullet = bullets[i];
+        
+        bullet.y -= bullet.speed;
+
+        // Checking for bullets leaving the screen
+        if(bullet.y + bullet.height < 0){
+            bullets.splice(i,1);
+            continue;
+        }
+
+        var hitBox = bullet.x < startPoint.x + 25 && 
+                    bullet.x + bullet.width > startPoint.x &&
+                    bullet.y < startPoint.y + 25 && 
+                    bullet.y + bullet.height > startPoint.y;
+    
+        if(hitBox){
+            // Removing bullet
+            bullets.splice(i, 1);
+            startPoint.x = 100000;
+            moveDirection.x = 0;
+            moveDirection.y = 0;
+            score += 50
+            continue;
+        }
+
+        for(var j = 0; j < stars.length; j++){
+            if(shipToStarCollision(bullet, stars[j])){
+                bullets.splice(i, 1);
+                stars[j].x = Math.random() * canvas.width;
+                stars[j].y = -(Math.random() * canvas.height);
+                continue;
+            }
+        }
+
+        // Drawing bullet
+        ctx.fillStyle = bullet.color;
+        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     }
 
     ctx.fillStyle = boxColor;
@@ -208,10 +279,10 @@ function game(){
 
 }
 
-function shipToStarCollision(star){
+function shipToStarCollision(obj, star){
     // Checks distances
-    var closestX = Math.max(shipSprite.x, Math.min(star.x, shipSprite.x + 25));
-    var closestY = Math.max(shipSprite.y, Math.min(star.y, shipSprite.y + 25));
+    var closestX = Math.max(obj.x, Math.min(star.x, obj.x + 25));
+    var closestY = Math.max(obj.y, Math.min(star.y, obj.y + 25));
 
     // Assigns distances
     var dx = star.x - closestX
