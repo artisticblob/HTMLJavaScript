@@ -1,21 +1,36 @@
 // Week 4 Lab - Experimenting with canvas animation
 
+// Setting up canvas
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// Game FPS
 var fps = 1000/60;
 var timer = setInterval(game, fps);
 
+// Box movement code
+// Reference box movement code when the boxDeadTimer reaches zero
 var startPoint = {x:canvas.width/2, y:canvas.height/2};
 var moveDirection = {x:0.8, y:1};
 
+// image variables
 var boxColor = "red";
 var shipSprite = {image:document.getElementById("ship"),x:1,y:1,moveX:0,moveY:0};
 
+// Movement variables
 var acceleration = 0.5
 var friction = .95
 
+// HUD related variables
 var score = 0;
+var objDestroyed = 0;
+
+// Box death timer stuff
+var boxDeadTimer = 0;
+var boxIsDead = false;
+
+// Shoot sound
+var shotSound = new Audio("audio/button-4.mp3")
 
 function createStar(){
     var star = {
@@ -122,6 +137,7 @@ function game(){
         shipSprite.moveX = 0;
         shipSprite.moveY = 0;
         score = 0;
+        objDestroyed = 0;
     }
 
 
@@ -198,6 +214,8 @@ function game(){
             color: "white"
         });
         shootCooldown = 10;
+        shotSound.currentTime = 0;
+        shotSound.play();
     }
 
     //Draws Background
@@ -213,6 +231,7 @@ function game(){
             shipSprite.moveX = 0;
             shipSprite.moveY = 0;
             score = 0;
+            objDestroyed = 0;
         }
 
         stars[i].drawCircle();
@@ -248,7 +267,10 @@ function game(){
             startPoint.x = 100000;
             moveDirection.x = 0;
             moveDirection.y = 0;
-            score += 50
+            score += 50;
+            objDestroyed++;
+            boxDeadTimer = 180;
+            boxIsDead = true;
             continue;
         }
 
@@ -257,6 +279,7 @@ function game(){
                 bullets.splice(i, 1);
                 stars[j].x = Math.random() * canvas.width;
                 stars[j].y = -(Math.random() * canvas.height);
+                objDestroyed++;
                 continue;
             }
         }
@@ -266,6 +289,18 @@ function game(){
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     }
 
+    // Box respawn timer
+    if(boxDeadTimer > 0){
+        boxDeadTimer--
+        console.log(`boxDeathTimer: ${boxDeadTimer}`)
+    }
+
+    if(boxIsDead == true && boxDeadTimer === 0){
+        startPoint = {x:canvas.width/2, y:canvas.height/2};
+        moveDirection = {x:Math.random()*2, y:Math.random()*2};
+        boxIsDead = false;
+    }
+
     ctx.fillStyle = boxColor;
     ctx.fillRect(startPoint.x, startPoint.y, 25, 25);
     ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25, 25);
@@ -273,7 +308,11 @@ function game(){
     // fillstyle change
     ctx.fillStyle = "white";
 
-    // HUD Element
+    // HUD Element (ObjectsShot)
+    ctx.font = "30px Arial";
+    ctx.fillText(`Objects Shot: ${objDestroyed}`, canvas.width/2+180,40)
+
+    // HUD Element (Score)
     ctx.font = "30px Arial";
     ctx.fillText(`Score: ${score}`,20,40)
 
