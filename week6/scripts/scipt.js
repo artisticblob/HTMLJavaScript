@@ -126,7 +126,25 @@ document.addEventListener("keyup", function (e) {
     if (e.key == "Enter") {
         enter = false;
     }
-})
+});
+
+// button click event
+canvas.addEventListener("click", function(e){
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = (e.clientX - rect.left) * canvas.width / rect.width;
+    const mouseY = (e.clientY - rect.top) * canvas.height / rect.height;
+
+    if(states != "game" &&
+        mouseX >= canvas.width/2 - 100 &&
+        mouseX <= canvas.width/2 + 100 &&
+        mouseY >= canvas.height/2 + 100 &&
+        mouseY <= canvas.height/2 + 180
+    ){
+        startCooldown = 180
+        switchScenes("game")
+    }
+
+});
 
 // Game loop function
 function game() {
@@ -144,8 +162,20 @@ function game() {
             let instructionText = "[ Press enter to start ]";
             ctx.fillText(instructionText, canvas.width / 2 - (ctx.measureText(instructionText).width / 2), canvas.height / 2 + 40);
 
+            // Draws button base
+            ctx.fillStyle = "red";
+            ctx.fillRect(canvas.width/2 - 100, canvas.height/2 + 100, 200, 80);
+            // Draws button text
+            ctx.fillStyle = "white";
+            ctx.font = "24px Arial";
+            let buttonText = "Start Game";
+            ctx.fillText(buttonText, canvas.width/2 - (ctx.measureText(buttonText).width / 2), canvas.height/2 + 100 + 45, 200, 80);
+
+            // makes button clickable?
+
+            // Starts game with enter
             if (enter) {
-                startCooldown = 50;
+                startCooldown = 180;
                 switchScenes("game");
             }
 
